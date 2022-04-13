@@ -1,30 +1,32 @@
 import posts from '../tuits/tuits.js';
-
+import * as tuitsDao from '../tuits/tuits-dao.js';
 let tuits = posts;
 
-const createTuit = (req,res) => {
+const createTuit = async (req, res) => {
     const newTuit = req.body;
-    newTuit._id = (new Date()).getTime()+'';
+    // newTuit._id = (new Date()).getTime() + '';
     // newTuit.userName = 'React';
     newTuit.postedOn = new Date().getDate();
     newTuit.liked = false;
     newTuit.verified = false;
-    newTuit.handle="ReactJS";
-    newTuit.postedBy= {
+    newTuit.handle = "ReactJS";
+    newTuit.postedBy = {
         "username": "ReactJS"
     };
-    newTuit["logo-image"]= "../images/react.png";
-        newTuit.stats= {
+    newTuit["logo-image"] = "../images/react.png";
+    newTuit.stats = {
         retuits: 0,
-            likes: 0,
-            comments: 0
+        likes: 0,
+        comments: 0
     }
-    tuits.push(newTuit);
-    res.json(newTuit);
+    const insertedTuit = await tuitsDao.createTuit(newTuit);
+    // tuits.push(newTuit);
+    console.log(insertedTuit);
+    res.json(insertedTuit);
 }
-const findAllTuits = (req,res) => {
+const findAllTuits =async (req,res) => {
+    const tuits = await tuitsDao.findAllTuits();
     res.json(tuits);
-
 }
 const updateTuit = (req, res) => {
     const tuitdIdToUpdate = req.params.tid;
